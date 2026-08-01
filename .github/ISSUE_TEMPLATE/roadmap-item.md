@@ -1,60 +1,61 @@
 ---
 name: Roadmap item
-about: Propose or track a roadmap item (feature, chore, or epic) for the DROPZONA build plan
+about: Propose or track a gap/placeholder item for the Dropzona gap roadmap
 title: "[DZ-XX] <short imperative summary>"
-labels: [roadmap, needs-triage]
+labels: [needs-triage]
 assignees: ''
 ---
 
 <!--
-Before filing: read CONTRIBUTING.md for the taxonomy and standing rules.
-Reuse an existing DZ-01..DZ-29 ID if this item already has one; otherwise leave DZ-XX
-and a maintainer will mint the next DZ-30+ on triage.
-NEVER include secrets, tokens, keys, passwords, or an exact file-path+line "treasure map"
-for a security issue — reference the internal security note instead.
+Before filing: read CONTRIBUTING.md. This repo is GAP/PLACEHOLDER work only.
+Scope-check first — money/wallet/fee, GTM/pricing/budget, casino, and core-infra
+(end-live, auth, tests, .NET) are OUT of scope here and tracked privately.
+Reuse an existing DZ-## id if this item has one; otherwise leave DZ-XX and a
+maintainer will mint the next id on triage.
+NEVER include secrets, tokens, keys, or a file-path+line "treasure map".
 -->
 
 ## Description
-<!-- What are we building and why? Ground it in the code/strategy reality, not aspiration. -->
+<!-- Which route/placeholder is this, and what does "filled with real logic" mean here? -->
+
+
+## Route(s)
+<!-- e.g. /streamer/dashboard, /viewer/my-drops -->
 
 
 ## Priority
-<!-- One of: P0 (blocks revenue/launch or a live bug) · P1 (trust/feature) · P2 (polish) -->
-- [ ] `P0`
-- [ ] `P1`
-- [ ] `P2`
+- [ ] `P0` — blocks the Drops keystone or a live bug
+- [ ] `P1` — trust / feature
+- [ ] `P2` — polish or a park decision
 
 ## Effort
-<!-- One of: S (≤½d) · M (≤2d) · L (≤1wk). Split anything bigger than L. -->
-- [ ] `S`
-- [ ] `M`
-- [ ] `L`
+- [ ] `S` (≤½d) · [ ] `M` (≤2d) · [ ] `L` (≤1wk)
 
-## Milestone
-<!-- Pick one. -->
-- [ ] M0 · Truth & Hygiene
-- [ ] M1 · Fundable Beta  *(current focus)*
-- [ ] M2 · Proof & Public Beta
-- [ ] M3 · Retention & Moat
+## Sprint (milestone)
+- [ ] Sprint A · Quick wins
+- [ ] Sprint B · Drops keystone
+- [ ] Sprint C · Real-data surfaces
+- [ ] Sprint D · New features
+- [ ] Sprint E · Parked
 
 ## Area & Type
-- **Area:** <!-- Backend · Frontend · Infra · Security · GTM -->
-- **Type:** <!-- Feature · Chore · Epic -->
+- **Area:** <!-- Frontend · Backend (both for full-stack) -->
+- **Type:** <!-- Feature · Bug · Chore · Epic -->
+
+## Backend dependency
+<!-- None / existing endpoint / needs Drops persistence (DZ-01/08) / new endpoint. -->
+
 
 ## Acceptance criteria
-<!-- Verifiable in code/prod. "Done" = merged AND these are true. For money paths, dotnet test green with coverage. -->
+<!-- "Placeholder filled" DoD: real data from a real endpoint, <ComingSoon/> removed,
+     no dead buttons, loading/empty/error states, honest labels, verified in-app. -->
 - [ ] 
 - [ ] 
 
 ## Dependencies
-<!-- Blocking tickets (e.g. "blocked on DZ-08 Drops persistence") and any owner decision that must be logged first. -->
-- Blocked by: 
+- Blocked by: <!-- e.g. DZ-08 Drops persistence -->
 - Blocks: 
-- Decision needed: 
 
-## Standing-rule check
-<!-- Confirm this item does not violate a standing rule (see CONTRIBUTING.md). -->
-- [ ] No casino surface (co-brand / affiliate / referral / sponsor)
-- [ ] No skin-supplier deposit without written refundable float
-- [ ] No paid spend before the founding clip
+## Scope check
+- [ ] This is placeholder/gap work (not money/GTM/infra — those are tracked privately)
 - [ ] No secrets committed; env-injected only
