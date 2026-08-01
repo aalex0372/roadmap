@@ -1,0 +1,494 @@
+{
+  "milestones": [
+    {
+      "title": "M0 Truth & Hygiene",
+      "description": "Stop the bleeding and tell the truth. Security incidents, live money-loss bugs, and the founding-story groundwork. Nothing here is a feature — it is the cost of being safe to fund."
+    },
+    {
+      "title": "M1 Fundable Beta",
+      "description": "CURRENT FOCUS. Real USDC in, a real drop spends it, everything persisted, nothing overspent. Exit = an alpha streamer can self-fund a balance and run a real drop that cannot lose money and is fully audited. ~1.5-2 focused sprints away."
+    },
+    {
+      "title": "M2 Proof & Public Beta",
+      "description": "Turn the working loop into visible product and proof. Real-data surfaces (no mock numbers), auth restyle, comparison/SEO pages, the founding clip in the funnel, legal review. Exit = a demo-clean app a stranger can trust."
+    },
+    {
+      "title": "M3 Retention & Moat",
+      "description": "Retention, anti-farming, i18n, and the re-architecture debt. Only started once M1/M2 have landed and there is real usage to retain. Most items here are deliberately parked until scale."
+    }
+  ],
+  "labels": [
+    { "name": "priority/P0", "color": "b60205", "description": "Blocks revenue/launch or is a live bug. Do now." },
+    { "name": "priority/P1", "color": "d93f0b", "description": "Trust or feature completion." },
+    { "name": "priority/P2", "color": "fbca04", "description": "Polish or debt." },
+    { "name": "effort/S", "color": "c2e0c6", "description": "Small: <= half a day." },
+    { "name": "effort/M", "color": "fef2c0", "description": "Medium: <= 2 days." },
+    { "name": "effort/L", "color": "f9d0c4", "description": "Large: <= 1 week." },
+    { "name": "area/backend", "color": "1d76db", "description": ".NET GiveawayService / orchestrator / persistence." },
+    { "name": "area/frontend", "color": "0e8a16", "description": "Next.js app, pages-design slices, widgets." },
+    { "name": "area/infra", "color": "5319e7", "description": "Docker / Caddy / deploy / runtime topology." },
+    { "name": "area/security", "color": "e11d48", "description": "Secrets, auth, tokens, hardening." },
+    { "name": "area/gtm", "color": "0052cc", "description": "Go-to-market: site, outreach, clip, supply, legal." },
+    { "name": "type/bug", "color": "d73a4a", "description": "Defect: wrong or crashing behavior." },
+    { "name": "type/feature", "color": "0e8a16", "description": "New capability or surface." },
+    { "name": "type/chore", "color": "cccccc", "description": "Maintenance, cleanup, ops, decision." },
+    { "name": "type/epic", "color": "5319e7", "description": "Tracking issue spanning multiple tickets." },
+    { "name": "status/now", "color": "0e8a16", "description": "In progress this sprint." },
+    { "name": "status/next", "color": "1d76db", "description": "Queued for the next sprint." },
+    { "name": "status/later", "color": "c5def5", "description": "Scheduled but not yet queued." },
+    { "name": "status/parked", "color": "6a737d", "description": "Deliberately not being worked; decision recorded." },
+    { "name": "status/done", "color": "30a14e", "description": "Shipped and verified in code." }
+  ],
+  "issues": [
+    {
+      "title": "DZ-41 Epic: M1 Fundable Beta (money + persistence + stability)",
+      "body": "Tracking epic for the current focus milestone. Exit criteria = the M1 Definition of Done: an alpha streamer can self-fund a balance and run a real drop that cannot overspend, cannot lose money to escrow rollback, does not crash on end-live, and is fully persisted + audited.\n\n**Dependency spine:** DZ-07 -> DZ-02 finish -> DZ-06 / DZ-06b -> DZ-05 -> DZ-01 / DZ-08 -> wire Epic C. Frontend (DZ-04 finish, DZ-22, DZ-23) runs in parallel and only blocks on DZ-08 for real-data wiring.\n\n**Definition of Done (8 of 9 open as of 2026-08-01):**\n- [x] Top-up backend lands as persisted, spendable balance (DZ-03)\n- [ ] Top-up completes from the UI (DZ-04 finish)\n- [ ] Concurrent triggers cannot overspend (DZ-02 finish / DZ-06)\n- [ ] Cancelled trade refunds the ledger (DZ-06b)\n- [ ] end-live does not crash (DZ-07)\n- [ ] Every drop has a Drops + DrawAudit row (DZ-01 drops half / DZ-08)\n- [ ] Fee hook configurable, held at 0% (DZ-05)\n- [ ] dotnet test green with spend/end-live coverage (DZ-10)\n- [ ] No user-visible mock numbers where a funded streamer navigates (DZ-13/14/15/17)",
+      "labels": ["priority/P0", "effort/L", "area/backend", "type/epic", "status/now"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P0",
+      "effort": "L",
+      "status": "Now",
+      "area": "Backend"
+    },
+    {
+      "title": "DZ-30 Rotate exposed CI/bot credential committed to the production repo",
+      "body": "**`P0` `security` `live incident` — do today.**\n\nA reusable CI/bot credential was committed as an inline literal to the production repository and pushed to a public remote. Because it is reachable in git history, it must be treated as compromised regardless of whether it is currently active (it cannot be verified as inactive without using it).\n\nSpecifics (files, line references, commit, and the exact credential in question) are intentionally kept out of this public tracker and are recorded in the **internal security note** — see the private incident doc, do not paste them here.\n\n**Remediation:**\n- [ ] Rotate/revoke the credential at its source and issue a fresh one\n- [ ] Purge it from full git history (git-filter-repo / BFG) and force-push all affected branches\n- [ ] Add the offending dotfile(s) to `.gitignore` so they are no longer tracked\n- [ ] Replace every inline literal with an env-injected reference (`${...}`) supplied at deploy time\n- [ ] Sweep the repo for any other committed secrets and rotate as needed\n\n**Acceptance:** credential no longer present in any commit reachable from a public branch; services read it from injected env; a secret-scanner pass on history is clean.\n\n> Per repo policy: never paste secret values, tokens, or exact locations into this public roadmap. Reference the internal security note for detail.",
+      "labels": ["priority/P0", "effort/S", "area/security", "type/bug", "status/now"],
+      "milestone": "M0 Truth & Hygiene",
+      "priority": "P0",
+      "effort": "S",
+      "status": "Now",
+      "area": "Security"
+    },
+    {
+      "title": "DZ-07 end-live crashes on every call (NullReferenceException)",
+      "body": "`StreamLiveManager` uses `_streamerStateStore` but it is never constructor-injected/assigned, so `POST twitchStreaming/end-live` throws a NullReferenceException every time. Streamers cannot cleanly end a session.\n\n**Fix:**\n- [ ] Inject `IStreamerStateStore` into the `StreamLiveManager` constructor and assign the field\n- [ ] Add a regression test that calls end-live and asserts no NRE\n\n**Where:** `Application/Services/TwitchServices/StreamSessionService/StreamLiveManager.cs`.\n\n**Acceptance:** end-live returns success against a live session; regression test green in CI.",
+      "labels": ["priority/P0", "effort/S", "area/backend", "type/bug", "status/now"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P0",
+      "effort": "S",
+      "status": "Now",
+      "area": "Backend"
+    },
+    {
+      "title": "DZ-02 Overspend guard on the balance deduction (TOCTOU double-spend)",
+      "body": "The persisted balance ledger shipped (StreamerBalances + WalletTransactions; survives restart) — this ticket is the **remaining overspend finish**, the single most dangerous open bug.\n\n**Confirmed reachable, not theoretical:** concurrent GSI POSTs run the orchestrator in parallel with no per-streamer lock, over a **stale cached** balance held across an up-to-5-minute delivery poll, and the debit lands afterward with **no `>= 0` floor guard**. It will fire near balance depletion and drive the balance negative.\n\n**Fix:**\n- [ ] Make the deduction an atomic delta with a floor guard (`WHERE AmountUsdMinor + delta >= 0`)\n- [ ] Add a row-lock or optimistic-concurrency + retry on the deduct\n- [ ] Re-read balance inside the transaction (never trust the session cache for the spend decision)\n- [ ] Money-path test: two concurrent triggers near depletion cannot overspend; balance never goes negative\n\n**Note (DZ-12 link):** any lock added here only holds within one process — keep to a single backend instance until state moves to DB/Redis.\n\n**Acceptance:** concurrent-spend test proves no overspend; balance survives restart (already true).",
+      "labels": ["priority/P0", "effort/M", "area/backend", "type/bug", "status/now"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P0",
+      "effort": "M",
+      "status": "Now",
+      "area": "Backend"
+    },
+    {
+      "title": "DZ-06 Orchestrator money-flow hardening: atomic check+deduct + no double-delivery",
+      "body": "Two money-flow defects in `GiveawayOrchestrator` / delivery path beyond the DZ-02 floor guard.\n\n**(a) Non-atomic check-then-deduct:** balance is read from the session cache, then the purchase runs, then the debit is written — a classic TOCTOU. Fold the check + deduct into one transaction (pairs with DZ-02).\n\n**(b) Double-delivery on timeout:** `WaitForDelivery` TimedOut falls through to the next candidate in `BuyAndDeliver`, so a slow-but-successful purchase plus the retry can deliver **two** skins for one deduction. Add idempotency via `custom_id` so a retry cannot re-buy.\n\n- [ ] Check + deduct in a single transaction\n- [ ] Idempotent purchase keyed on `custom_id`; timeout path cannot double-buy\n- [ ] Money-path tests for both\n\n**Acceptance:** timeout path never double-delivers; deduction is atomic with the balance check.",
+      "labels": ["priority/P0", "effort/M", "area/backend", "type/bug", "status/next"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P0",
+      "effort": "M",
+      "status": "Next",
+      "area": "Backend"
+    },
+    {
+      "title": "DZ-06b Escrow is not delivery: refund the ledger on trade rollback",
+      "body": "**Confirmed money-loss, not premature-only.** The delivery path counts Steam state 11 (InEscrow) / op `\"hold\"` as Completed and irreversibly debits the streamer within the 5-minute poll. Escrow is **not** a delivery guarantee — it can EscrowRollback (Steam Support / cancelled hold / failure) up to **15 days** later, returning items to the marketplace while the winner gets nothing and the streamer stays debited. There is no re-poll and no refund path -> permanent loss. A nullable `steam_trade_offer_state` also falls through to the `\"hold\"` branch, debiting before any offer is accepted.\n\n**Fix (choose one, plus refund):**\n- [ ] Poll to a terminal state (3 = Accepted only) before debiting, OR write a pending-delivery row settled on a confirmed-delivered signal\n- [ ] Guard the nullable state so it cannot fall through to the `\"hold\"` branch\n- [ ] **Refund-on-rollback:** a rollback creates a refund ledger row and marks the drop failed\n- [ ] Money-path test: cancelled/rolled-back trade -> refund row + failed drop, streamer made whole\n\n**Acceptance:** a rolled-back trade never leaves the streamer debited; delivery is only counted on a terminal Accepted/confirmed signal.",
+      "labels": ["priority/P0", "effort/M", "area/backend", "type/bug", "status/next"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P0",
+      "effort": "M",
+      "status": "Next",
+      "area": "Backend"
+    },
+    {
+      "title": "DZ-05 Fee hook (dormant, ship at 0%)",
+      "body": "There is no fee logic anywhere in the codebase today — the orchestrator deducts exactly the purchase price. Add a `PlatformFeePct` config applied at deduction, shipped at **0%**, so turning revenue on later (the ~10% service fee per the business model) is a config change, not a release.\n\n- [ ] `PlatformFeePct` config value, default 0\n- [ ] Applied at the deduction point in the orchestrator\n- [ ] Unit test proving 0% == price and a non-zero value applies correctly\n\n**Acceptance:** fee is a single config knob; 0% today; documented for the pricing flip at M3.",
+      "labels": ["priority/P0", "effort/S", "area/backend", "type/feature", "status/next"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P0",
+      "effort": "S",
+      "status": "Next",
+      "area": "Backend"
+    },
+    {
+      "title": "DZ-01 DB schema: Drops + DrawAudit (money tables already shipped)",
+      "body": "The **money half** of the original schema shipped (StreamerBalances + WalletTransactions, migration `20260710114058`). This ticket is the **remaining drops half** — and it is the keystone that unblocks most placeholder surfaces.\n\n- [ ] `Drops` entity + DbSet: streamer, trigger, rule, skin + rarity, price, winner, marketplace op id, delivery/trade status, timestamps\n- [ ] `DrawAudit` entity + DbSet: entrants snapshot/count, winner, seed, timestamp\n- [ ] One EF migration; applies clean (note: `db/init.sql` is empty — schema comes from EF only)\n\n**Acceptance:** migration applies clean; the entities exist for DZ-08 to write into. Every drop/draw event will have a row once DZ-08 lands.",
+      "labels": ["priority/P0", "effort/M", "area/backend", "type/feature", "status/next"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P0",
+      "effort": "M",
+      "status": "Next",
+      "area": "Backend"
+    },
+    {
+      "title": "DZ-08 Persist every drop (orchestrator write-path) — KEYSTONE",
+      "body": "**The single keystone.** Today `StartGiveaway` draws a winner, buys+delivers, debits the balance — and persists **nothing** (the result is only logged). That missing write-path is the root cause behind most placeholders: dashboard stats/feed, history, profile Statistics/Prizes, and viewer my-drops all have no data to show. It is already on the P0 money track (required for the \"no mock numbers\" DoD).\n\n**Depends on DZ-01 (Drops/DrawAudit entities).**\n\n- [ ] Orchestrator writes a Drops + DrawAudit row per giveaway `{timestamp, channel, winner, trigger, skin+rarity, rewardUSD, tradeStatus, deliveryState}`\n- [ ] Switch winner pick from `new Random()` to a seeded/crypto draw; record entrant count\n- [ ] Honor or hide `WinnersCount` per decision DZ-D3 (recommendation: draw 1, hide the input for M1)\n- [ ] Streamer-scoped and viewer-scoped paginated read endpoints\n\n**Acceptance:** every drop is queryable; \"was it fair?\" is answerable from the audit row. Unlocks DZ-13/14/15/17.",
+      "labels": ["priority/P0", "effort/M", "area/backend", "type/feature", "status/next"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P0",
+      "effort": "M",
+      "status": "Next",
+      "area": "Backend"
+    },
+    {
+      "title": "DZ-04 Wallet frontend: finish the top-up completion loop",
+      "body": "The wallet real-data layer shipped (mock arrays gone, live query + amount-only mutation). What remains is the **completion gap**: without it, the finished backend top-up is unreachable from the UI.\n\n- [ ] Consume the checkout `hostedUrl` (full-page redirect on Top-Up)\n- [ ] Handle `?topup=success` -> \"crediting...\" + poll balance + `router.replace`\n- [ ] Handle `?topup=cancelled` -> dismissible notice\n- [ ] Fix `parseStatus` Pending/Completed mis-map in the wallet utils\n- [ ] Remove the dead Withdraw branch's hardcoded quote numbers; set Withdraw tab to disabled + \"Coming soon\"\n- [ ] Fold in the wallet typos (Withdrow/Withdrowal/addresess) — see DZ-24\n\n**Acceptance:** a staging top-up completes end-to-end from the UI and lands as spendable balance; transactions list renders from the ledger.",
+      "labels": ["priority/P0", "effort/M", "area/frontend", "type/feature", "status/now"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P0",
+      "effort": "M",
+      "status": "Now",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-03 Wallet backend: OpenSettle top-ups (SHIPPED)",
+      "body": "**Done and verified in code (2026-07-10..22).** `GET /wallet`, `POST /wallet/top-up` -> hostedUrl, and a signature-verified + idempotent + `fullySettled`-gated webhook that credits the ledger async. Matches the rev2 amount-only spec (amount-only DTO, server-pinned chain/token, one `/checkouts` call, no customer/invoice). ~25 money-path tests on Testcontainers Postgres.\n\nEvidence: `WalletController.cs`, `WalletService.cs`, `OpenSettleService.cs`, `OpenSettleWebhookVerifier.cs`.\n\n**Open ops follow-ups (tracked elsewhere):** supply live `OPENSETTLE_API_KEY / WORKSPACE_ID / WEBHOOK_SECRET`; confirm the settlement rail (code pins `ethereum/USDT`, rev2 spec says `USDC/base`) and the min bound (fix the `$0.01` min below OpenSettle's floor) before a live top-up.",
+      "labels": ["priority/P0", "effort/L", "area/backend", "type/feature", "status/done"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P0",
+      "effort": "L",
+      "status": "Done",
+      "area": "Backend"
+    },
+    {
+      "title": "DZ-45 INFRA: .NET 10 bump + deploy path (SHIPPED)",
+      "body": "**Done and verified in code.** All csproj + Dockerfile on `net10.0` / `sdk/aspnet:10.0`. DI + compose + Caddy wired; the OpenSettle webhook is public at `api.dropzona.tv/wallet/webhook/opensettle`. A Telegram ops notifier (Pending-Review / reversal / unknown-checkout) is deployed.\n\nEvidence: `GiveawayService.csproj`, `Dockerfile`, `Program.cs`, `compose.production.yml`, `Caddyfile`, `deploy.yml`.\n\n**Linked hygiene:** the ops-notifier credential handling is the subject of DZ-30 (rotate + env-inject).",
+      "labels": ["priority/P1", "effort/M", "area/infra", "type/chore", "status/done"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P1",
+      "effort": "M",
+      "status": "Done",
+      "area": "Infra"
+    },
+    {
+      "title": "DZ-09 Restore auth attributes on streaming endpoints",
+      "body": "Class-level `[Authorize]` / `[RequireUserId]` are commented out on the streaming controller, and actions carry `[Authorize]` but skip `[RequireUserId]`. Also remove leftover scaffold/dead endpoints.\n\n- [ ] Restore class-level `[Authorize]` + `[RequireUserId]` on `TwitchStreamingController`\n- [ ] Ensure every streaming action enforces both attributes\n- [ ] Delete the commented `[HttpPost(\"test\")]` scaffold and the dead `getuser` endpoint\n\n**Acceptance:** all streaming endpoints reject unauthenticated / user-less requests; no dead scaffold remains.",
+      "labels": ["priority/P0", "effort/S", "area/backend", "type/chore", "status/next"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P0",
+      "effort": "S",
+      "status": "Next",
+      "area": "Backend"
+    },
+    {
+      "title": "DZ-10 Revive + extend the test suite (money-IN already covered)",
+      "body": "Wallet money-IN is covered (~25 tests). The rest of the suite was historically commented out and the **spend side has zero coverage**. Make tests mandatory for the money paths.\n\n- [ ] Re-enable the commented unit + integration tests (Testcontainers Postgres fixture already exists)\n- [ ] Add coverage for the orchestrator spend path (DZ-02/05/06/06b) and end-live (DZ-07)\n- [ ] `dotnet test` runs green in CI with money-path coverage as a merge gate\n\n**Acceptance:** CI blocks a regression in overspend, escrow-refund, fee, or end-live.",
+      "labels": ["priority/P1", "effort/S", "area/backend", "type/chore", "status/next"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P1",
+      "effort": "S",
+      "status": "Next",
+      "area": "Backend"
+    },
+    {
+      "title": "DZ-22 App metadata + SEO (quick win)",
+      "body": "Root layout metadata is `{ title: 'Dropzona' }` only — no template, description, or OG. The `/auth` title is still the stale \"Drops | Auth\".\n\n- [ ] Add a title template (`%s | Dropzona`), description, and OG/Twitter tags in the root layout\n- [ ] Fix the `/auth` page title\n- [ ] Add minimal SSR fallback content so links unfurl and pages are crawlable\n\n**Acceptance:** shared links unfurl with a proper card; no page ships the placeholder title. Quick SEO win to run while the backend builds.",
+      "labels": ["priority/P1", "effort/S", "area/frontend", "type/chore", "status/now"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P1",
+      "effort": "S",
+      "status": "Now",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-31 Dashboard triggers-summary on real data (quick win, no backend)",
+      "body": "The dashboard triggers-summary panel renders \"COMING SOON\" with the real markup commented out — but the trigger rules it needs **already work** on `/triggers`. Zero backend, zero money-track dependency.\n\n- [ ] Reuse the existing `useGiveawaySettings` query\n- [ ] Re-map the commented markup to the real `GameTrigger` shape (`triggerType/isEnabled/winnersCount/maxPrizeAmount/iconName`)\n- [ ] Remove the `ComingSoon` for this panel\n\n**Acceptance:** the dashboard shows the streamer's actual configured triggers; no mock feed in this panel.",
+      "labels": ["priority/P1", "effort/S", "area/frontend", "type/feature", "status/now"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P1",
+      "effort": "S",
+      "status": "Now",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-33 Profile \"Member since\" always shows today (bug, quick win)",
+      "body": "The profile \"Member since\" value is computed with `new Date()`, so it always renders today's date. The real value is already persisted as `UserPlatformInfo.CreatedAt`.\n\n- [ ] Surface `UserPlatformInfo.CreatedAt` through `/user/me`\n- [ ] Add it to the `UserData` type\n- [ ] Replace the `new Date()` call in the profile with the real value\n\n**Acceptance:** \"Member since\" reflects the account's real creation date. (Broader profile realness is DZ-17.)",
+      "labels": ["priority/P1", "effort/S", "area/frontend", "type/bug", "status/now"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P1",
+      "effort": "S",
+      "status": "Now",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-32 New GET /streamer/health endpoint + wire the health page",
+      "body": "The `/streamer/health` route is a placeholder with a full UI already commented out. Build the aggregating endpoint and light up the 3 derivable rows now; stub the trade-queue row until DZ-08.\n\n- [ ] New `GET /streamer/health` aggregating `StreamerSessionCache` presence + `IsStreamLiveAsync` + a **new GSI last-seen** timestamp on the GSI receiver\n- [ ] Ship the 3 derivable rows; leave the trade-queue row stubbed with a clear label\n- [ ] Uncomment + wire the health page UI\n\n**Acceptance:** a live streamer sees accurate presence / stream-live / last-GSI-seen; no fabricated numbers. (In-memory presence is fine at single-instance; see DZ-12.)",
+      "labels": ["priority/P1", "effort/M", "area/backend", "type/feature", "status/now"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P1",
+      "effort": "M",
+      "status": "Now",
+      "area": "Backend"
+    },
+    {
+      "title": "DZ-34 Reconcile the maxDropsPerWiewer typo before DZ-21",
+      "body": "The zod schema, defaults, and controller name carry a `maxDropsPerWiewer` typo. Settle the canonical `maxDropsPerViewer` name now — cheaply, before DZ-21 builds real persistence on top of it.\n\n- [ ] Rename to `maxDropsPerViewer` across schema, defaults, and controller\n- [ ] Verify no runtime reference still uses the misspelled key\n\n**Acceptance:** one canonical spelling; DZ-21 can build on it without a rename migration.",
+      "labels": ["priority/P2", "effort/S", "area/frontend", "type/chore", "status/next"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P2",
+      "effort": "S",
+      "status": "Next",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-11 Rules-of-Hooks crash risk in profile ShareOption",
+      "body": "`ShareOption` early-returns before its hooks run, so toggling the Steam connection can crash React (violates the Rules of Hooks). The error state also carries an \"Opps! Something gone wrong\" typo.\n\n- [ ] Move all hooks above any conditional return\n- [ ] Enable the react-hooks lint rule to catch regressions\n- [ ] Fix the error-state copy\n\n**Acceptance:** toggling Steam connection never crashes; lint enforces hook ordering.",
+      "labels": ["priority/P1", "effort/S", "area/frontend", "type/bug", "status/next"],
+      "milestone": "M2 Proof & Public Beta",
+      "priority": "P1",
+      "effort": "S",
+      "status": "Next",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-16 Coming-soon widget dead buttons (Back to App / Request a Feature)",
+      "body": "The shared coming-soon layout's \"Back to App\" and \"Request a Feature\" buttons have no handlers on 5+ pages.\n\n- [ ] \"Back to App\" -> `router.back()` or role home\n- [ ] \"Request a Feature\" -> support form or Discord link\n\n**Acceptance:** both buttons work on every coming-soon surface.",
+      "labels": ["priority/P1", "effort/S", "area/frontend", "type/bug", "status/next"],
+      "milestone": "M2 Proof & Public Beta",
+      "priority": "P1",
+      "effort": "S",
+      "status": "Next",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-23 Restyle /auth to the landing brand; delete dead Terms component",
+      "body": "The Jul-3 auth patch was never applied (verified: no landing-theme tokens, no LegalNote, no Archivo; the base commit is stale vs HEAD). HEAD already starts at role-select with the old Terms dialog as dead code.\n\n**Decision (recommended):** restyle auth to the landing brand by hand against HEAD (use the old patch as reference only), keep passive consent, and delete the dead `TermsAndPrivacy` component.\n\n- [ ] Apply landing brand tokens/typography to `/auth`\n- [ ] Keep passive consent (no re-added checkbox without legal review — see risk R5)\n- [ ] Remove the unmounted `TermsAndPrivacy` dead code\n\n**Acceptance:** `/auth` matches the live landing brand; no dead Terms component remains.",
+      "labels": ["priority/P1", "effort/M", "area/frontend", "type/feature", "status/next"],
+      "milestone": "M2 Proof & Public Beta",
+      "priority": "P1",
+      "effort": "M",
+      "status": "Next",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-42 Epic: wire or kill the placeholder surfaces (Epic C)",
+      "body": "Tracking epic for the placeholder surfaces. **A slice is fake exactly when its `*-storage.tsx` serves consts instead of a query hook** — and most are already built and commented out behind `<ComingSoon/>`, so once DZ-08 (Drops persistence) lands, wiring is cheap.\n\n**Wire after DZ-08:** DZ-13 dashboard, DZ-14 history, DZ-15 my-drops, DZ-17 profile.\n**Park explicitly:** DZ-19 skin-pool (recommend kill), DZ-20 stream-info + live-streams, DZ-21 triggers phase 2.\n\n- [ ] DZ-13 Dashboard stats + event feed\n- [ ] DZ-14 History table\n- [ ] DZ-15 Viewer my-drops (win-proof surface)\n- [ ] DZ-17 Profile realness\n- [ ] DZ-19/20/21 parked decisions recorded",
+      "labels": ["priority/P1", "effort/L", "area/frontend", "type/epic", "status/later"],
+      "milestone": "M2 Proof & Public Beta",
+      "priority": "P1",
+      "effort": "L",
+      "status": "Later",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-13 Dashboard on real data (stats + event feed)",
+      "body": "`dashboard-storage.tsx` is fake (s1mple/ZywOo/donk feed, \"23 drops/$340\"); stats + triggers panels render `<ComingSoon/>` with real markup commented out; SkinPool \"Manage\" links to `/`.\n\n**Depends on DZ-08.**\n- [ ] Build all four stat cards behind one `GET /streamer/dashboard-stats` (do not ship 2-of-4)\n- [ ] Relabel \"Viewers\" -> \"Eligible viewers\" (the cache only holds giveaway-joined viewers, not concurrents)\n- [ ] Wire the event feed to Drops data; replace the literal \"1189 today\" badge with a real count\n- [ ] Un-comment panels as data becomes real; fix the SkinPool \"Manage\" link\n\n**Acceptance:** dashboard shows only real numbers for a funded streamer.",
+      "labels": ["priority/P1", "effort/M", "area/frontend", "type/feature", "status/later"],
+      "milestone": "M2 Proof & Public Beta",
+      "priority": "P1",
+      "effort": "M",
+      "status": "Later",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-14 History on real data",
+      "body": "`history-storage.tsx` is 30 fake rows; the page renders coming-soon with the real table commented out.\n\n**Depends on DZ-08.**\n- [ ] Wire `RewardsTable` to streamer-scoped Drops\n- [ ] Wire or remove the dead Filter/Export buttons (leave decorative only until a customer asks)\n- [ ] Remove the mock storage\n\n**Acceptance:** history renders the streamer's real drops with pagination.",
+      "labels": ["priority/P1", "effort/S", "area/frontend", "type/feature", "status/later"],
+      "milestone": "M2 Proof & Public Beta",
+      "priority": "P1",
+      "effort": "S",
+      "status": "Later",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-15 Viewer my-drops on real data (win-proof surface)",
+      "body": "20 fake DropItems in `drops-storage.tsx`; the page is coming-soon. This is the viewer's win-proof / shareable-brag surface — GTM cares most about this one.\n\n**Depends on DZ-08.**\n- [ ] Swap the const-context for a viewer-scoped query hook (Drops filtered by winner + delivery status)\n- [ ] Uncomment the UI; drop `ComingSoonLayout`\n- [ ] Stub \"Watch Time\" (no source yet) with a clear label\n\n**Acceptance:** a viewer who won can see and share their real prize with delivery status.",
+      "labels": ["priority/P1", "effort/S", "area/frontend", "type/feature", "status/later"],
+      "milestone": "M2 Proof & Public Beta",
+      "priority": "P1",
+      "effort": "S",
+      "status": "Later",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-17 Profile realness (Member since, badge, Statistics, Prizes)",
+      "body": "Broader profile realness beyond the DZ-33 Member-since quick win. Participation badge is hardcoded \"Inactive\"; Statistics / My Prizes are coming-soon over mock consts.\n\n**Statistics depends on DZ-08.**\n- [ ] Derive the participation badge from real activity\n- [ ] Wire Statistics to Drops aggregates (uncomment + feed real data)\n- [ ] Replace My Prizes mock consts with real drops (net-new prize-grid UI tracked with DZ-08 read endpoint)\n\n**Acceptance:** no mock numbers on the profile a funded streamer can reach.",
+      "labels": ["priority/P1", "effort/M", "area/frontend", "type/feature", "status/later"],
+      "milestone": "M2 Proof & Public Beta",
+      "priority": "P1",
+      "effort": "M",
+      "status": "Later",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-24 User-facing typo sweep",
+      "body": "Fix user-visible typos first, then mechanical identifier renames as a follow-up PR.\n\n**User-facing:**\n- [ ] Withdrow / Withdrowal / withdrow (wallet UI)\n- [ ] \"Russion\" (header language menu)\n- [ ] \"Opps!\" (profile — overlaps DZ-11)\n- [ ] \"AVP | Asiimov\" (lives mock)\n- [ ] \"and and\" (profile dialog)\n- [ ] Russian dev-error string in the setup wizard\n\n**Identifier renames (follow-up):** `getTrdeLinkFromUser`, `updeteGiveawaySettings`, `INDECATOR_METADATA`, `GsiLoaction`, `setIsAggred`, `descripton`.\n\n**Acceptance:** no visible typo on any surface a beta user reaches.",
+      "labels": ["priority/P2", "effort/S", "area/frontend", "type/chore", "status/next"],
+      "milestone": "M2 Proof & Public Beta",
+      "priority": "P2",
+      "effort": "S",
+      "status": "Next",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-25 Dead-code purge",
+      "body": "Remove commented markup and unused code so audits stay honest — keep only what has a ticket.\n\n- [ ] Commented \"10 LIVE\" pill markup; unused `Zap` import\n- [ ] Unmounted `TermsAndPrivacy` (coordinate with DZ-23)\n- [ ] Commented middleware redirect\n- [ ] Commented sidebar entries (Skin Pool badge \"34\", Settings, Anti-Fraud)\n- [ ] Sidebar \"Live Streams\" fake badge `messages:10`\n\n**Acceptance:** no dead/commented UI code without an owning ticket.",
+      "labels": ["priority/P2", "effort/S", "area/frontend", "type/chore", "status/later"],
+      "milestone": "M2 Proof & Public Beta",
+      "priority": "P2",
+      "effort": "S",
+      "status": "Later",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-26 Version wordmark from config, not hardcoded",
+      "body": "The \"BETA v0.4\" wordmark in the sidebar is hardcoded. Source the version from config / package.json so it does not drift.\n\n- [ ] Read version from a single source of truth\n- [ ] Render it in the sidebar wordmark\n\n**Acceptance:** the displayed version tracks the real build version.",
+      "labels": ["priority/P2", "effort/S", "area/frontend", "type/chore", "status/later"],
+      "milestone": "M2 Proof & Public Beta",
+      "priority": "P2",
+      "effort": "S",
+      "status": "Later",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-27 Setup-wizard finish dialog reflects real state",
+      "body": "The setup-wizard finish dialog shows fixed step statuses regardless of the user's real state (hardcoded consts).\n\n- [ ] Derive each step's status from actual user state (Twitch, Steam, GSI, triggers)\n- [ ] Remove the hardcoded status consts\n\n**Acceptance:** the finish dialog reflects what the user has actually completed.",
+      "labels": ["priority/P2", "effort/S", "area/frontend", "type/bug", "status/later"],
+      "milestone": "M2 Proof & Public Beta",
+      "priority": "P2",
+      "effort": "S",
+      "status": "Later",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-29 Security debt: GSI token rotation + rate-limit; encrypt tokens at rest",
+      "body": "Hardening debt beyond the DZ-30 incident. The GSI token is a bearer secret in the CS2 cfg with no rotation and no rate-limit on the anonymous `POST /gsi`; Twitch tokens are stored plaintext.\n\n- [ ] Rate-limit the anonymous `POST /gsi`\n- [ ] Add a GSI token rotation endpoint\n- [ ] Encrypt stored Twitch tokens at rest\n\n**Acceptance:** GSI ingestion cannot be trivially flooded; a leaked GSI token is rotatable; tokens are not readable at rest.",
+      "labels": ["priority/P2", "effort/M", "area/security", "type/chore", "status/later"],
+      "milestone": "M3 Retention & Moat",
+      "priority": "P2",
+      "effort": "M",
+      "status": "Later",
+      "area": "Security"
+    },
+    {
+      "title": "DZ-12 Single-instance constraint: document now, re-architect later",
+      "body": "All runtime state is in-memory singletons (StreamerSessionCache, ChannelViewerCache, InMemoryStreamerStateStore). A restart mid-stream loses sessions/entrants, and two instances break everything — including any lock added for DZ-02, which only holds within one process.\n\n**Near-term:** document the constraint and keep exactly one backend instance.\n**Later (M3):** move session/entrant/balance-cache state to DB/Redis.\n\n- [ ] Document the single-instance rule in the deploy runbook\n- [ ] Parked design ticket for the DB/Redis migration\n\n**Acceptance (now):** the constraint is written down where an operator will see it before scaling out.",
+      "labels": ["priority/P2", "effort/L", "area/infra", "type/chore", "status/parked"],
+      "milestone": "M3 Retention & Moat",
+      "priority": "P2",
+      "effort": "L",
+      "status": "Parked",
+      "area": "Infra"
+    },
+    {
+      "title": "DZ-18 Real role-switch endpoint (\"Switch to Streamer\" is a lie)",
+      "body": "\"Switch to Streamer\" is a bare `<Link href=\"/streamer/dashboard\">` — no role-switch endpoint exists on either side; role is a client-side URL concept.\n\n**Parked (M3):** needs owner + backend agreement on the trigger (decision DZ-D2: what makes a viewer a streamer — Steam+GSI connected? explicit activation?).\n- [ ] Resolve DZ-D2\n- [ ] Build a real role-activation endpoint (Steam+GSI-gated per the dual-role model)\n- [ ] Call it from the profile action\n\n**Acceptance:** role activation is a server-verified state change, not a URL.",
+      "labels": ["priority/P1", "effort/M", "area/backend", "type/feature", "status/parked"],
+      "milestone": "M3 Retention & Moat",
+      "priority": "P1",
+      "effort": "M",
+      "status": "Parked",
+      "area": "Backend"
+    },
+    {
+      "title": "DZ-19 Skin-pool slice: kill it (recommended)",
+      "body": "Orphaned slice: ~30 hardcoded skins, no app route, sidebar link commented, and the backend ignores any pool concept (it buys the cheapest-in-budget skin live from the marketplace).\n\n**Decision (DZ-D4, recommend): delete the slice now.** Keeping unreachable mock code costs maintenance and confuses every audit. Re-spec later as a real purchase constraint only if streamers ask.\n- [ ] Delete the skin-pool slice + its mock storage\n- [ ] Confirm nothing else imports it\n\n**Acceptance:** no unreachable skin-pool code in the tree.",
+      "labels": ["priority/P1", "effort/S", "area/frontend", "type/chore", "status/parked"],
+      "milestone": "M3 Retention & Moat",
+      "priority": "P1",
+      "effort": "S",
+      "status": "Parked",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-20 Stream-info + live-streams: park explicitly, delete the mock storages",
+      "body": "`/stream/[id]` renders the same fake \"ShadowStrike\" stream for every id and is unreachable via nav; live-streams is coming-soon over big mock sets (\"AVP | Asiimov\" typo). Discovery is a strategy non-goal until 500+ weekly-active streamers.\n\n**Decision (DZ-D4): park both behind coming-soon and delete the mock storages** — do not leave half-mounted mocks. Re-scope a real MVP only at M3 with presence data.\n- [ ] Keep the coming-soon shells; delete the mock storages\n- [ ] Fix the \"AVP | Asiimov\" typo if the shell text survives\n\n**Acceptance:** no fake stream data ships; the surfaces are honest coming-soon.",
+      "labels": ["priority/P1", "effort/S", "area/frontend", "type/chore", "status/parked"],
+      "milestone": "M3 Retention & Moat",
+      "priority": "P1",
+      "effort": "S",
+      "status": "Parked",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-21 Triggers phase 2: Drop Logic + Viewer Requirements (post-Drops)",
+      "body": "The DropLogic + ViewerRequirements panels are fully-built forms commented out behind `<ComingSoon/>`, with the `maxDropsPerWiewer` schema typo (fix via DZ-34) — but the **backend has no fields and the form has no save mutation**, so this is a real feature, not an uncomment.\n\n**Post-Drops.** MED value = anti-farming that protects the money layer (today the winner pick is pure `Random()` — no cooldown, dedup, watch-time, subscriber, or account-age gate).\n- [ ] Migration for `winnerSelection / minWatchTime / cooldown / maxDropsPerViewer / eventDedupWindow` + the viewer gates\n- [ ] DTO / service / controller persistence\n- [ ] Real orchestrator enforcement of the gates\n- [ ] Build the save mutation the commented form lacks\n\n**Acceptance:** trigger rules persist and the orchestrator actually enforces them.",
+      "labels": ["priority/P2", "effort/L", "area/frontend", "type/feature", "status/later"],
+      "milestone": "M3 Retention & Moat",
+      "priority": "P2",
+      "effort": "L",
+      "status": "Later",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-28 Language dropdown: park i18n consciously",
+      "body": "The language dropdown is a pointer-events-none \"Soon\" overlay — fine to keep, but it is the only i18n surface. Park it consciously; RU/BR localization is on the M3 GTM path.\n\n- [ ] Keep the \"Soon\" overlay; document that i18n is intentionally deferred to M3\n\n**Acceptance:** the deferral is a recorded decision, not an accident.",
+      "labels": ["priority/P2", "effort/S", "area/frontend", "type/chore", "status/parked"],
+      "milestone": "M3 Retention & Moat",
+      "priority": "P2",
+      "effort": "S",
+      "status": "Parked",
+      "area": "Frontend"
+    },
+    {
+      "title": "DZ-35 GTM: capture the founding clip (white-glove alpha)",
+      "body": "The founding clip is the master GTM asset and the gate the whole channel plan hangs on. It does **not** need the wallet finished — run the white-glove alpha with **manually-funded** prizes.\n\n- [ ] Run 2-3 Twitch demo sessions with seeded/manual prizes\n- [ ] Capture one 15-30s \"ace -> winner drawn -> trade sent\" master clip\n- [ ] Cut 9:16 variants for short-form\n- [ ] Drop the clip into the site's \"Live demo - coming soon\" slot\n\n**Acceptance:** a real, shareable win clip exists and fills the missing social proof. Note: hold all paid ad spend until this clip exists and OG cards unfurl (standing rule).",
+      "labels": ["priority/P1", "effort/L", "area/gtm", "type/feature", "status/now"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P1",
+      "effort": "L",
+      "status": "Now",
+      "area": "GTM"
+    },
+    {
+      "title": "DZ-37 GTM: send ShadowPay Message #2 + open SkinsBack",
+      "body": "Skin supply has been frozen since 2026-06-03. The sourcing + delivery integration is already built and wired to the live merchant API — the negotiation gates **funding** (the float), not engineering.\n\n- [ ] Send the pre-written Message #2 (lead with the refundable-float question)\n- [ ] Open SkinsBack in parallel for leverage / backup\n- [ ] Lock delivery/refund SLA and confirm unused-balance withdrawal terms\n\n**Standing rule:** do NOT deposit any float until refundable/withdrawable float is confirmed **in writing** (SkinBid's Nov-2025 bankruptcy turned funded balances into unsecured claims). Keep Dropzona's Steam Web API key read-only.\n\n**Acceptance:** Message #2 sent, SkinsBack application open, no float wired without written refundable terms.",
+      "labels": ["priority/P1", "effort/S", "area/gtm", "type/chore", "status/now"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P1",
+      "effort": "S",
+      "status": "Now",
+      "area": "GTM"
+    },
+    {
+      "title": "DZ-38 GTM: reserve @dropzona, stand up waitlist ESP, fix OG/robots/dropzona.com",
+      "body": "Foundational GTM hygiene so links unfurl and a list can start collecting before the clip lands.\n\n- [ ] Reserve @dropzona on X\n- [ ] Stand up a waitlist / email ESP (the list does not exist yet)\n- [ ] Fix OG cards + robots.txt (still points at dropzona.com) so shared links unfurl and pages are crawlable\n- [ ] Decide buy-or-purge on the squattable dropzona.com\n\n**Acceptance:** handle reserved, waitlist live, OG/robots correct, .com decision recorded.",
+      "labels": ["priority/P1", "effort/S", "area/gtm", "type/chore", "status/now"],
+      "milestone": "M0 Truth & Hygiene",
+      "priority": "P1",
+      "effort": "S",
+      "status": "Now",
+      "area": "GTM"
+    },
+    {
+      "title": "DZ-39 GTM: build the 150-250-name targeting shortlist + concierge outreach",
+      "body": "Distribution is a war fought with depth, not blast volume. Build the targeting layer and run concierge outreach into the alpha.\n\n- [ ] Build a 150-250-name shortlist (SullyGnome + TwitchTracker; 50-800 CCV, English, active CS2)\n- [ ] Run 10-20 concierge outreaches\n- [ ] Seed 8-10 alpha streamers at $30-50; fee stays 0; grandfather them 90 days\n\n**Acceptance:** shortlist exists, first outreach wave sent, alpha cohort seeded.",
+      "labels": ["priority/P1", "effort/M", "area/gtm", "type/feature", "status/next"],
+      "milestone": "M1 Fundable Beta",
+      "priority": "P1",
+      "effort": "M",
+      "status": "Next",
+      "area": "GTM"
+    },
+    {
+      "title": "DZ-36 GTM: publish beta pricing + the founding clip in the funnel",
+      "body": "The new marketing site is already live on dropzona.tv. The remaining funnel gaps are pricing clarity and the clip.\n\n- [ ] Publish pricing: \"free during beta - ~10% service fee after - viewers never pay\"\n- [ ] Place the founding clip in the \"Live demo - coming soon\" slot (from DZ-35)\n- [ ] Ship the MyDrop comparison / SEO pages with the clean/compliant positioning\n\n**Acceptance:** a stranger can understand what it costs and see proof it works.",
+      "labels": ["priority/P1", "effort/S", "area/gtm", "type/chore", "status/next"],
+      "milestone": "M2 Proof & Public Beta",
+      "priority": "P1",
+      "effort": "S",
+      "status": "Next",
+      "area": "GTM"
+    },
+    {
+      "title": "DZ-40 GTM: commission the legal review",
+      "body": "The legal surface is un-reviewed (no entity in Terms, blank jurisdiction, passive consent, prepaid stored-value/money-transmission optics, sweepstakes, crypto-AML). This is a funded M2 line item ($1,200 fixed-fee startup package) and the highest-leverage necessary spend.\n\n- [ ] Provide entity name + jurisdiction (owner values)\n- [ ] Commission the review: entity, sweepstakes, stored-value/money-transmission on the no-custody structure, crypto-AML\n- [ ] Keep the no-custody architecture literal (OpenSettle pays, partner holds skins; inbound-only wallet until reviewed)\n\n**Acceptance:** a qualified legal read retires risk R5 and confirms the compliance posture before public launch.",
+      "labels": ["priority/P1", "effort/M", "area/gtm", "type/chore", "status/later"],
+      "milestone": "M2 Proof & Public Beta",
+      "priority": "P1",
+      "effort": "M",
+      "status": "Later",
+      "area": "GTM"
+    },
+    {
+      "title": "DZ-43 DECISION: no casino monetization on any surface (permanent)",
+      "body": "Recorded standing decision so it is not re-litigated. **Verdict: NO on any surface, permanently** — and the \"walled-off cash-casino NewCo\" escape hatch is a **licensing dead-end** for the US/UK/EU audience, not a post-beta option.\n\n**Why (platform-survival, not ethics):**\n- Twitch bans promotion/sponsorship of skins gambling by name; surfacing a skin casino on-stream (co-brand, affiliate link, referral code) risks OAuth-app revocation + participating streamers suspended.\n- Valve can revoke Steam API access \"at any time, for any reason, without notice\" — and has, for association.\n- The affordable offshore license (Curacao/Anjouan) is geo-blocked out of exactly this audience; the license that reaches them (US state-by-state + UKGC) is millions and closed to skin/crypto casinos; serving unlicensed is criminally exposed.\n- Casino upside = f(installed base). With ~0 activated streamers today, the near-term realizable figure is ~$0 — there is no cheque to resist.\n\n**Standing rule:** no casino co-brand, affiliate link, referral code, or sponsor readout on any Twitch/Steam/product surface — ever. Do not reopen without gambling counsel confirming a license that legally reaches the audience.\n\nThis issue is `parked / wontfix` by design — kept open only as the visible decision record.",
+      "labels": ["priority/P2", "effort/S", "area/gtm", "type/chore", "status/parked"],
+      "milestone": "M0 Truth & Hygiene",
+      "priority": "P2",
+      "effort": "S",
+      "status": "Parked",
+      "area": "GTM"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Roadmap questions & discussion
+    url: https://github.com/aalex0372/roadmap/discussions
+    about: Ask about priorities, milestones, or the process before filing an item — general questions go here, not into issues.
+  - name: Security & sensitive reports
+    url: https://github.com/aalex0372/roadmap/blob/main/CONTRIBUTING.md#standing-rules-do-not-violate-without-a-written-decision
+    about: Do NOT open a public issue for anything sensitive. Never post secrets, tokens, or exact file locations. Report privately to the maintainers per the internal security note.
